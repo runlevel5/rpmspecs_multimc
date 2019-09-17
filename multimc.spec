@@ -2,7 +2,7 @@
 %global quazip_commit 3691d57d3af13f49b2be2b62accddefee3c26b9c
 
 Name:           multimc
-Version:        0.6.6
+Version:        0.6.7
 Release:        1%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
@@ -86,5 +86,8 @@ echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_
 
 
 %changelog
-* Sat Jul 27 2019 ElXreno <elxreno@gmail.com>
+* Sun Aug 11 2019 ElXreno <elxreno@gmail.com> - 0.6.7
+- Updated to 0.6.7 version
+
+* Sat Jul 27 2019 ElXreno <elxreno@gmail.com> - 0.6.6
 - Init packaging
