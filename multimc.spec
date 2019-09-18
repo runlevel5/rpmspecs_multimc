@@ -3,7 +3,7 @@
 
 Name:           multimc
 Version:        0.6.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 License:        Apache 2.0
@@ -86,6 +86,9 @@ echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_
 
 
 %changelog
+* Wed Sep 18 2019 ElXreno <elxreno@gmail.com> - 0.6.7-3
+- Rebuild for Rawhide
+
 * Tue Sep 17 2019 ElXreno <elxreno@gmail.com> - 0.6.7-2
 - Rebuild for F31
 
