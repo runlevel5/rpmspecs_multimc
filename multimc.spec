@@ -3,10 +3,10 @@
 
 Name:           multimc
 Version:        0.6.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
-License:        Apache 2.0
+License:        ASL 2.0
 URL:            https://multimc.org
 Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}.tar.gz
@@ -86,6 +86,9 @@ echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_
 
 
 %changelog
+* Thu Nov 28 2019 ElXreno <elxreno@gmail.com> - 0.6.7-4
+- Fixed license
+
 * Wed Sep 18 2019 ElXreno <elxreno@gmail.com> - 0.6.7-3
 - Rebuild for Rawhide
 
