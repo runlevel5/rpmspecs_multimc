@@ -1,4 +1,4 @@
-%global libnbtplusplus_commit 92f8d57227feb94643378ecf595626c60c0f59b8
+%global libnbtplusplus_commit 508eda831686c6d89b75bbb49d91e01b0f73d2ad
 %global quazip_commit 3691d57d3af13f49b2be2b62accddefee3c26b9c
 
 Name:           multimc
@@ -14,11 +14,12 @@ Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}.tar.g
 
 BuildRequires:  gcc-c++
 BuildRequires:  cmake3
-BuildRequires:  zlib-devel
-BuildRequires:  qt5-qtbase-devel
-BuildRequires:  java-1.8.0-openjdk-devel
-BuildRequires:  mesa-libGL-devel
 BuildRequires:  desktop-file-utils
+
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(Qt5)
+BuildRequires:  pkgconfig(gl)
+BuildRequires:  java-1.8.0-openjdk-devel
 
 Requires:       hicolor-icon-theme
 Requires:       java-headless
@@ -40,37 +41,41 @@ rmdir libraries/libnbtplusplus libraries/quazip
 mv -f libraries/quazip-%{quazip_commit} libraries/quazip
 mv -f libraries/libnbtplusplus-%{libnbtplusplus_commit} libraries/libnbtplusplus
 
+mkdir -p %{_target_platform}
+
 
 %build
-%cmake3 -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DMultiMC_LAYOUT=lin-system \
-        -DMultiMC_LIBRARY_DEST_DIR=%{_libdir}/%{name} \
-        -DMultiMC_UPDATER=OFF \
-        .
+pushd %{_target_platform}
+%cmake \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DMultiMC_LAYOUT=lin-system \
+    -DMultiMC_LIBRARY_DEST_DIR=%{_libdir}/%{name} \
+    -DMultiMC_UPDATER=OFF \
+    ..
+popd
 
-%make_build
+%make_build -C %{_target_platform}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%make_install
+%make_install -C %{_target_platform}
 
-# SVG Icon
+# Install SVG icon...
 install -d -m 0755 %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 install -p -m 0644 application/resources/multimc/scalable/multimc.svg \
         %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
-# Desktop file installation
+# Install desktop file...
 desktop-file-install application/package/linux/multimc.desktop
 
-# Fix libs
+# Proper library linking...
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
 echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf"
 
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%check
+%make_build test -C %{_target_platform}
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %files
