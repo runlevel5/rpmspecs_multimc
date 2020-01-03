@@ -48,6 +48,7 @@ mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %cmake \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DMultiMC_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
     -DMultiMC_LAYOUT=lin-system \
     -DMultiMC_LIBRARY_DEST_DIR=%{_libdir}/%{name} \
     -DMultiMC_UPDATER=OFF \
