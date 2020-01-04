@@ -3,7 +3,7 @@
 
 Name:           multimc
 Version:        0.6.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -138,6 +138,12 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sat Jan 04 2020 ElXreno <elxreno@gmail.com> - 0.6.7-5
+- Updated libnbtplusplus to commit 508eda831686c6d89b75bbb49d91e01b0f73d2ad
+- Added check entry
+- Added notification url
+- Fixed license and added licenses breakdown
+
 * Thu Nov 28 2019 ElXreno <elxreno@gmail.com> - 0.6.7-4
 - Fixed license
 
