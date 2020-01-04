@@ -6,7 +6,53 @@ Version:        0.6.7
 Release:        4%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
-License:        ASL 2.0
+#
+# CC-BY-SA
+# ---------------------------------------
+# application/resources/multimc/
+#
+# BSD 3-clause "New" or "Revised" License
+# ---------------------------------------
+# application/
+# libraries/LocalPeer/
+# libraries/ganalytics/
+#
+# Boost Software License (v1.0)
+# ---------------------------------------
+# cmake/
+#
+# Expat License
+# ---------------------------------------
+# libraries/systeminfo/
+#
+# GNU Lesser General Public License (v2 or later)
+# ---------------------------------------
+# libraries/rainbow
+#
+# GNU Lesser General Public License (v2.1 or later)
+# ---------------------------------------
+# libraries/iconfix/
+# libraries/quazip/
+#
+# GNU Lesser General Public License (v3 or later)
+# ---------------------------------------
+# libraries/libnbtplusplus/
+#
+# GPL (v2)
+# ---------------------------------------
+# libraries/pack200/
+#
+# ISC License
+# ---------------------------------------
+# libraries/hoedown/
+#
+# zlib/libpng license
+# ---------------------------------------
+# libraries/quazip/quazip/unzip.h
+# libraries/quazip/quazip/zip.h
+#
+
+License:        CC-BY-SA and ASL 2.0 and BSD and Boost and LGPLv2 and LGPLv2+ and LGPLv3+ and GPLv2 and GPLv2+ and ISC and zlib
 URL:            https://multimc.org
 Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}.tar.gz
