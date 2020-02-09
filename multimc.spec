@@ -1,3 +1,6 @@
+# Enable Ninja build
+%bcond_without ninja_build
+
 %global libnbtplusplus_commit 508eda831686c6d89b75bbb49d91e01b0f73d2ad
 %global quazip_commit 3691d57d3af13f49b2be2b62accddefee3c26b9c
 
@@ -58,6 +61,10 @@ Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}.tar.gz#/%
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}.tar.gz
 Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}.tar.gz
 
+%if %{with ninja_build}
+BuildRequires:  ninja-build
+%endif
+
 BuildRequires:  gcc-c++
 BuildRequires:  cmake3
 BuildRequires:  desktop-file-utils
@@ -93,6 +100,7 @@ mkdir -p %{_target_platform}
 %build
 pushd %{_target_platform}
 %cmake \
+    %{?with_ninja_build: -GNinja} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DMultiMC_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
     -DMultiMC_LAYOUT=lin-system \
@@ -101,11 +109,19 @@ pushd %{_target_platform}
     ..
 popd
 
+%if %{with ninja_build}
+%ninja_build -C %{_target_platform}
+%else
 %make_build -C %{_target_platform}
+%endif
 
 
 %install
+%if %{with ninja_build}
+%ninja_install -C %{_target_platform}
+%else
 %make_install -C %{_target_platform}
+%endif
 
 # Install SVG icon...
 install -d -m 0755 %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
@@ -121,7 +137,11 @@ echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_
 
 
 %check
+%if %{with ninja_build}
+%ninja_build test -C %{_target_platform}
+%else
 %make_build test -C %{_target_platform}
+%endif
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
