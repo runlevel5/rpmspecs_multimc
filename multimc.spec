@@ -2,8 +2,8 @@
 %global quazip_commit 3691d57d3af13f49b2be2b62accddefee3c26b9c
 
 Name:           multimc
-Version:        0.6.7
-Release:        5%{?dist}
+Version:        0.6.8
+Release:        1%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -138,6 +138,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sun Feb 09 2020 ElXreno <elxreno@gmail.com> - 0.6.8-1
+- Updated to version 0.6.8
+
 * Sat Jan 04 2020 ElXreno <elxreno@gmail.com> - 0.6.7-5
 - Updated libnbtplusplus to commit 508eda831686c6d89b75bbb49d91e01b0f73d2ad
 - Added check entry
