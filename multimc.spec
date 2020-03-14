@@ -6,7 +6,7 @@
 
 Name:           multimc
 Version:        0.6.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -57,25 +57,32 @@ Summary:        Minecraft launcher with ability to manage multiple instances
 
 License:        CC-BY-SA and ASL 2.0 and BSD and Boost and LGPLv2 and LGPLv2+ and LGPLv3+ and GPLv2 and GPLv2+ and ISC and zlib
 URL:            https://multimc.org
-Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}.tar.gz
-Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}.tar.gz
+Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}/%{name}-%{version}.tar.gz
+Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_commit}.tar.gz
+Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_commit}.tar.gz
 
 %if %{with ninja_build}
 BuildRequires:  ninja-build
 %endif
 
-BuildRequires:  gcc-c++
 BuildRequires:  cmake3
 BuildRequires:  desktop-file-utils
+BuildRequires:  gcc-c++
 
-BuildRequires:  pkgconfig(zlib)
-BuildRequires:  pkgconfig(Qt5)
-BuildRequires:  pkgconfig(gl)
+# Fix warning: Could not complete Guile gdb module initialization from:
+# /usr/share/gdb/guile/gdb/boot.scm
+BuildRequires:  gdb-headless
+
 BuildRequires:  java-1.8.0-openjdk-devel
+BuildRequires:  pkgconfig(gl)
+BuildRequires:  pkgconfig(Qt5)
+BuildRequires:  pkgconfig(zlib)
 
 Requires:       hicolor-icon-theme
-Requires:       java-headless
+Requires:       java-1.8.0-openjdk
+
+# Recommend java 11 for newest Minecraft versions
+Recommends:     java-11-openjdk
 
 
 %description
@@ -158,6 +165,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sat Mar 14 2020 ElXreno <elxreno@gmail.com> - 0.6.8-2
+- Add java-11-openjdk as recommended package
+
 * Sun Feb 09 2020 ElXreno <elxreno@gmail.com> - 0.6.8-1
 - Updated to version 0.6.8
 
