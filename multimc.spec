@@ -6,7 +6,7 @@
 
 Name:           multimc
 Version:        0.6.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -73,16 +73,13 @@ BuildRequires:  gcc-c++
 # /usr/share/gdb/guile/gdb/boot.scm
 BuildRequires:  gdb-headless
 
-BuildRequires:  java-1.8.0-openjdk-devel
+BuildRequires:  java-devel
 BuildRequires:  pkgconfig(gl)
 BuildRequires:  pkgconfig(Qt5)
 BuildRequires:  pkgconfig(zlib)
 
 Requires:       hicolor-icon-theme
-Requires:       java-1.8.0-openjdk
-
-# Recommend java 11 for newest Minecraft versions
-Recommends:     java-11-openjdk
+Requires:       java-headless
 
 
 %description
@@ -165,6 +162,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sun Apr 19 2020 ElXreno <elxreno@gmail.com> - 0.6.11-2
+- Replaced java-1.8.0-openjdk by java-headless
+
 * Mon Mar 30 2020 ElXreno <elxreno@gmail.com> - 0.6.11-1
 - Updated to version 0.6.11
 
