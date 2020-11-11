@@ -1,12 +1,16 @@
 # Enable Ninja build
 %bcond_without ninja_build
 
-%global libnbtplusplus_commit 508eda831686c6d89b75bbb49d91e01b0f73d2ad
-%global quazip_commit 3691d57d3af13f49b2be2b62accddefee3c26b9c
+%global libnbtplusplus_commit       dc72a20b7efd304d12af2025223fad07b4b78464
+%global libnbtplusplus_shortcommit  %(c=%{libnbtplusplus_commit}; echo ${c:0:7})
+%global quazip_commit               3691d57d3af13f49b2be2b62accddefee3c26b9c
+%global quazip_shortcommit          %(c=%{quazip_commit}; echo ${c:0:7})
+
+%global date                        20201111
 
 Name:           multimc
 Version:        0.6.11
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -58,8 +62,8 @@ Summary:        Minecraft launcher with ability to manage multiple instances
 License:        CC-BY-SA and ASL 2.0 and BSD and Boost and LGPLv2 and LGPLv2+ and LGPLv3+ and GPLv2 and GPLv2+ and ISC and zlib
 URL:            https://multimc.org
 Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}/%{name}-%{version}.tar.gz
-Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_commit}.tar.gz
-Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_commit}.tar.gz
+Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_shortcommit}.tar.gz
+Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_shortcommit}.tar.gz
 
 %if %{with ninja_build}
 BuildRequires:  ninja-build
@@ -98,11 +102,8 @@ rmdir libraries/libnbtplusplus libraries/quazip
 mv -f libraries/quazip-%{quazip_commit} libraries/quazip
 mv -f libraries/libnbtplusplus-%{libnbtplusplus_commit} libraries/libnbtplusplus
 
-mkdir -p %{_target_platform}
-
 
 %build
-pushd %{_target_platform}
 %cmake \
     %{?with_ninja_build: -GNinja} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -110,26 +111,16 @@ pushd %{_target_platform}
     -DMultiMC_LAYOUT=lin-system \
     -DMultiMC_LIBRARY_DEST_DIR=%{_libdir}/%{name} \
     -DMultiMC_UPDATER=OFF \
-    ..
-popd
+    .
 
-%if %{with ninja_build}
-%ninja_build -C %{_target_platform}
-%else
-%make_build -C %{_target_platform}
-%endif
+%cmake_build
 
 
 %install
-%if %{with ninja_build}
-%ninja_install -C %{_target_platform}
-%else
-%make_install -C %{_target_platform}
-%endif
+%cmake_install
 
 # Install SVG icon...
-install -d -m 0755 %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-install -p -m 0644 application/resources/multimc/scalable/multimc.svg \
+install -Dp -m 0644 application/resources/multimc/scalable/multimc.svg \
         %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 # Install desktop file...
@@ -141,11 +132,7 @@ echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_
 
 
 %check
-%if %{with ninja_build}
-%ninja_build test -C %{_target_platform}
-%else
-%make_build test -C %{_target_platform}
-%endif
+%ctest
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
@@ -162,6 +149,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Wed Nov 11 11:37:26 +03 2020 ElXreno <elxreno@gmail.com> - 0.6.11-3
+- Update libnbtplusplus to commit dc72a20
+
 * Sun Apr 19 2020 ElXreno <elxreno@gmail.com> - 0.6.11-2
 - Replaced java-1.8.0-openjdk by java-headless
 
