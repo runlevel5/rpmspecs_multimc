@@ -6,11 +6,11 @@
 %global quazip_commit               3691d57d3af13f49b2be2b62accddefee3c26b9c
 %global quazip_shortcommit          %(c=%{quazip_commit}; echo ${c:0:7})
 
-%global date                        20201111
+%global date                        20210322
 
 Name:           multimc
-Version:        0.6.11
-Release:        3%{?dist}
+Version:        0.6.12
+Release:        1%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -149,6 +149,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Mon Mar 22 2021 ElXreno <elxreno@gmail.com> - 0.6.12-1
+- Update to version 0.6.12
+
 * Wed Nov 11 11:37:26 +03 2020 ElXreno <elxreno@gmail.com> - 0.6.11-3
 - Update libnbtplusplus to commit dc72a20
 
