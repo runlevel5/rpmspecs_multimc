@@ -6,11 +6,9 @@
 %global quazip_commit               3691d57d3af13f49b2be2b62accddefee3c26b9c
 %global quazip_shortcommit          %(c=%{quazip_commit}; echo ${c:0:7})
 
-%global date                        20210322
-
 Name:           multimc
 Version:        0.6.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -65,6 +63,8 @@ Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}/%{name}-%
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_shortcommit}.tar.gz
 Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_shortcommit}.tar.gz
 
+Patch0:         https://github.com/MultiMC/MultiMC5/commit/3a1abb555b844c79a80615727b11019403767ce7.patch
+
 %if %{with ninja_build}
 BuildRequires:  ninja-build
 %endif
@@ -94,7 +94,7 @@ a simple interface.
 
 
 %prep
-%autosetup -n MultiMC5-%{version}
+%autosetup -p1 -n MultiMC5-%{version}
 
 tar -xvf %{SOURCE1} -C libraries
 tar -xvf %{SOURCE2} -C libraries
@@ -149,6 +149,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Fri May 28 2021 ElXreno <elxreno@gmail.com> - 0.6.12-2
+- Fix build on Fedora 34
+
 * Mon Mar 22 2021 ElXreno <elxreno@gmail.com> - 0.6.12-1
 - Update to version 0.6.12
 
