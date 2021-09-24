@@ -7,8 +7,8 @@
 %global quazip_shortcommit          %(c=%{quazip_commit}; echo ${c:0:7})
 
 Name:           multimc
-Version:        0.6.12
-Release:        2%{?dist}
+Version:        0.6.13
+Release:        1%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
 #
@@ -63,8 +63,6 @@ Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}/%{name}-%
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_shortcommit}.tar.gz
 Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_shortcommit}.tar.gz
 
-Patch0:         https://github.com/MultiMC/MultiMC5/commit/3a1abb555b844c79a80615727b11019403767ce7.patch
-
 %if %{with ninja_build}
 BuildRequires:  ninja-build
 %endif
@@ -84,6 +82,8 @@ BuildRequires:  pkgconfig(zlib)
 
 Requires:       hicolor-icon-theme
 Requires:       java-headless
+
+Recommends:     xrandr
 
 
 %description
@@ -120,11 +120,11 @@ mv -f libraries/libnbtplusplus-%{libnbtplusplus_commit} libraries/libnbtplusplus
 %cmake_install
 
 # Install SVG icon...
-install -Dp -m 0644 application/resources/multimc/scalable/multimc.svg \
+install -Dp -m 0644 launcher/resources/multimc/scalable/multimc.svg \
         %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 # Install desktop file...
-desktop-file-install application/package/linux/multimc.desktop
+desktop-file-install launcher/package/linux/multimc.desktop
 
 # Proper library linking...
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
@@ -149,6 +149,10 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Fri Sep 24 2021 ElXreno - 0.6.13-1
+- Update to version 0.6.13
+  Add recommended dependency (@critbase request)
+
 * Fri May 28 2021 ElXreno <elxreno@gmail.com> - 0.6.12-2
 - Fix build on Fedora 34
 
