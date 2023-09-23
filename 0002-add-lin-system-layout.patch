@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db4187a7..26c66cee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -228,6 +228,17 @@ elseif(Launcher_LAYOUT_REAL STREQUAL "lin-nodeps")
+     configure_file(launcher/Launcher.in "${CMAKE_CURRENT_BINARY_DIR}/LauncherScript" @ONLY)
+     install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/LauncherScript" DESTINATION ${BUNDLE_DEST_DIR} RENAME ${Launcher_Name})
+ 
++elseif(Launcher_LAYOUT_REAL STREQUAL "lin-system")
++    set(BINARY_DEST_DIR "bin")
++    set(LIBRARY_DEST_DIR "lib")
++    set(PLUGIN_DEST_DIR "plugins")
++    set(BUNDLE_DEST_DIR ".")
++    set(RESOURCES_DEST_DIR "resources")
++    set(JARS_DEST_DIR "bin/jars")
++    set(Launcher_RELEASE_VERSION_NAME "${Launcher_VERSION_MAJOR}.${Launcher_VERSION_MINOR}.${Launcher_VERSION_HOTFIX}.git%{Launcher_VERSION_BUILD}")
++
++    # install as bundle with no dependencies included
++    set(INSTALL_BUNDLE "nodeps")
++
+ elseif(Launcher_LAYOUT_REAL STREQUAL "win-bundle")
+     set(BINARY_DEST_DIR ".")
+     set(LIBRARY_DEST_DIR ".")
+

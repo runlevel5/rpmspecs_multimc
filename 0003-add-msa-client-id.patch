@@ -1,0 +1,13 @@
+diff --git a/notsecrets/Secrets.cpp b/notsecrets/Secrets.cpp
+index 88995635..ec83b583 100644
+--- a/notsecrets/Secrets.cpp
++++ b/notsecrets/Secrets.cpp
+@@ -28,7 +28,7 @@ namespace {
+  * If you intend to base your own launcher on this code, take care and customize this to obfuscate the client ID, so it cannot be trivially found by casual attackers.
+  */
+ 
+-QString MSAClientID = "";
++QString MSAClientID = "6b329578-bfec-42a3-b503-303ab3f2ac96";
+ }
+ 
+ namespace Secrets {
