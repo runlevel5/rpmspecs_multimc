@@ -3,11 +3,11 @@
 
 %global libnbtplusplus_commit       dc72a20b7efd304d12af2025223fad07b4b78464
 %global libnbtplusplus_shortcommit  %(c=%{libnbtplusplus_commit}; echo ${c:0:7})
-%global quazip_commit               3691d57d3af13f49b2be2b62accddefee3c26b9c
+%global quazip_commit               b1a72ac0bb5a732bf887a535ab75c6f9bedb6b6b
 %global quazip_shortcommit          %(c=%{quazip_commit}; echo ${c:0:7})
 
 Name:           multimc
-Version:        0.6.13
+Version:        0.6.16
 Release:        1%{?dist}
 Summary:        Minecraft launcher with ability to manage multiple instances
 
@@ -59,15 +59,24 @@ Summary:        Minecraft launcher with ability to manage multiple instances
 
 License:        CC-BY-SA and ASL 2.0 and BSD and Boost and LGPLv2 and LGPLv2+ and LGPLv3+ and GPLv2 and GPLv2+ and ISC and zlib
 URL:            https://multimc.org
-Source0:        https://github.com/MultiMC/MultiMC5/archive/%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/MultiMC/Launcher/archive/%{version}/%{name}-%{version}.tar.gz
 Source1:        https://github.com/MultiMC/libnbtplusplus/archive/%{libnbtplusplus_commit}/libnbtplusplus-%{libnbtplusplus_shortcommit}.tar.gz
 Source2:        https://github.com/MultiMC/quazip/archive/%{quazip_commit}/quazip-%{quazip_shortcommit}.tar.gz
+Source3:        %{expand:%%(pwd)/multimc.svg}
+Source4:        %{expand:%%(pwd)/multimc.desktop}
+Source5:        %{expand:%%(pwd)/multimc.metainfo.xml}
+Source6:        %{expand:%%(pwd)/runner.sh}
+
+Patch1:         0001-fix-compilation-issue.patch
+Patch2:         0002-add-lin-system-layout.patch
+Patch3:         0003-add-msa-client-id.patch
 
 %if %{with ninja_build}
 BuildRequires:  ninja-build
 %endif
 
 BuildRequires:  cmake3
+BuildRequires:  /usr/bin/appstream-util
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
 
@@ -94,7 +103,7 @@ a simple interface.
 
 
 %prep
-%autosetup -p1 -n MultiMC5-%{version}
+%autosetup -p1 -n Launcher-%{version}
 
 tar -xvf %{SOURCE1} -C libraries
 tar -xvf %{SOURCE2} -C libraries
@@ -102,15 +111,19 @@ rmdir libraries/libnbtplusplus libraries/quazip
 mv -f libraries/quazip-%{quazip_commit} libraries/quazip
 mv -f libraries/libnbtplusplus-%{libnbtplusplus_commit} libraries/libnbtplusplus
 
+cp %{SOURCE3} .
+cp %{SOURCE4} .
+cp %{SOURCE5} .
+cp %{SOURCE6} .
 
 %build
 %cmake \
     %{?with_ninja_build: -GNinja} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DMultiMC_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
-    -DMultiMC_LAYOUT=lin-system \
-    -DMultiMC_LIBRARY_DEST_DIR=%{_libdir}/%{name} \
-    -DMultiMC_UPDATER=OFF \
+    -DLauncher_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
+    -DCMAKE_INSTALL_PREFIX=/opt/%{name} \
+    -DLauncher_EMBED_SECRETS=OFF \
+    -DLauncher_LAYOUT=lin-system \
     .
 
 %cmake_build
@@ -120,35 +133,45 @@ mv -f libraries/libnbtplusplus-%{libnbtplusplus_commit} libraries/libnbtplusplus
 %cmake_install
 
 # Install SVG icon...
-install -Dp -m 0644 launcher/resources/multimc/scalable/multimc.svg \
+install -Dp -m 0644 ./multimc.svg \
         %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 # Install desktop file...
-desktop-file-install launcher/package/linux/multimc.desktop
+desktop-file-install ./multimc.desktop
+
+# Install metainfo XML file...
+mkdir -p %{buildroot}%{_metainfodir}
+install -m 0644 ./multimc.metainfo.xml %{buildroot}%{_metainfodir}/multimc.metainfo.xml
+
+# Install the runner file...
+mkdir -p %{buildroot}%{_bindir}
+install -m 0755 ./runner.sh %{buildroot}%{_bindir}/%{name}
 
 # Proper library linking...
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
-echo "%{_libdir}/%{name}" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf"
-
+echo "/opt/%{name}/lib" > "%{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf"
 
 %check
-%ctest
+%ctest %{?_smp_mflags}
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
-
+appstream-util validate-relax --nonet %{buildroot}/%{_metainfodir}/multimc.metainfo.xml
 
 %files
 %license COPYING.md
 %doc README.md changelog.md
 %{_bindir}/%{name}
-%{_libdir}/%{name}/*
-%{_datadir}/%{name}/*
+/opt/%{name}/*
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 %{_datadir}/applications/%{name}.desktop
+%{_metainfodir}/multimc.metainfo.xml
 %config %{_sysconfdir}/ld.so.conf.d/*
 
-
-
 %changelog
+* Sat Sep 23 2023 Trung Lê <8@tle.id.au> - 0.6.16-1
+- Update to version 0.6.16
+- Restore the deleted lin-system LAYOUT in CMakeList.txt
+- Bundle the metainfo, desktop and runner
+
 * Fri Sep 24 2021 ElXreno - 0.6.13-1
 - Update to version 0.6.13
   Add recommended dependency (@critbase request)

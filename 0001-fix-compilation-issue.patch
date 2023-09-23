@@ -1,0 +1,27 @@
+From d49849a4a994e26876e2d19aa948f943a37718b8 Mon Sep 17 00:00:00 2001
+From: Trung Lê <8@tle.id.au>
+Date: Sun, 24 Sep 2023 01:39:01 +1000
+Subject: [PATCH] Fix compilation issue
+
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57d6755..92523e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -65,6 +65,10 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror=return-type -O0")
+ # Fix build with Qt 5.13
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_DEPRECATED_WARNINGS=Y")
+ 
++# Fix C++20 compat issue
++# ref: https://github.com/MultiMC/Launcher/issues/5211
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++20-compat")
++
+ ##################################### Set Application options #####################################
+ 
+ ######## Set URLs ########
+-- 
+2.41.0
+
